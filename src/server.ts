@@ -8,10 +8,10 @@ async function bootsrtap() {
     console.log("✅ database connected successfully");
 
     app.listen(config.port, () => {
-      console.log(`🦻 Example app listening on port ${config.port}`);
+      console.log(`🦻 Application listening on port ${config.port}`);
     });
   } catch (error) {
-    console.log(`❌ failed to connect database: ${error}`);
+    console.log(`❌ Failed to connect database: ${error}`);
   }
 }
 
