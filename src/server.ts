@@ -2,6 +2,9 @@
 import mongoose from "mongoose";
 import app from "./app";
 import config from "./config/index";
+import { Server } from "http";
+
+let server: Server;
 
 async function bootsrtap() {
   try {
@@ -14,6 +17,19 @@ async function bootsrtap() {
   } catch (error) {
     console.log(`❌ Failed to connect database: ${error}`);
   }
+
+  //gracefully off/terminate the server
+  process.on("unhandledRejection", error => {
+    console.log("Unhandled rejection detected, we are closing our server...");
+    if (server) {
+      server.close(() => {
+        console.log(error);
+        process.exit(1);
+      });
+    } else {
+      process.exit(1);
+    }
+  });
 }
 
 bootsrtap();
