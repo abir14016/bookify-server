@@ -12,4 +12,7 @@ router.post(
   BookController.createBook,
 );
 
+//router for getting all books with pagination, searching and filtering
+router.get("/", BookController.getAllBooks);
+
 export const BookRoutes = router;
