@@ -12,7 +12,7 @@ const createBookZodSchema = z.object({
       required_error: "Genre name is required",
     }),
     imageURL: z.string().optional(),
-    publicationYaer: z.number({
+    publicationYear: z.number({
       required_error: "Publication year is required",
     }),
     owner: z.string({

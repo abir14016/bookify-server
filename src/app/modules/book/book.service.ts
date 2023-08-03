@@ -3,7 +3,7 @@ import { Book } from "./book.model";
 
 //create book function
 const createBook = async (payload: IBook): Promise<IBook> => {
-  const result = await Book.create(payload);
+  const result = (await Book.create(payload)).populate("owner");
   return result;
 };
 

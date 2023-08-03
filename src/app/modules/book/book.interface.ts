@@ -6,7 +6,7 @@ export type IBook = {
   author: string;
   genre: string;
   imageURL?: string;
-  publicationYaer: number;
+  publicationYear: number;
   owner: Types.ObjectId | IUser;
 };
 
