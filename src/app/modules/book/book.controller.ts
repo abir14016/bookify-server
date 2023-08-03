@@ -18,6 +18,6 @@ const createBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const UserController = {
+export const BookController = {
   createBook,
 };

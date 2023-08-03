@@ -21,6 +21,6 @@ const createBookZodSchema = z.object({
   }),
 });
 
-export const UserValidation = {
+export const BookValidation = {
   createBookZodSchema,
 };
