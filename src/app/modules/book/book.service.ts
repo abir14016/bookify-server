@@ -79,7 +79,19 @@ const getAllBooks = async (
   };
 };
 
+//get single book function
+const getSingleBook = async (id: string): Promise<IBook | null> => {
+  //checking wheater the book is exist or not
+  const isBookExist = await Book.findById(id);
+  if (!isBookExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Book not found !");
+  }
+  const result = await Book.findById(id).populate("owner");
+  return result;
+};
+
 export const BookService = {
   createBook,
   getAllBooks,
+  getSingleBook,
 };

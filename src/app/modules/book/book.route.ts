@@ -5,6 +5,9 @@ import { BookController } from "./book.controller";
 
 const router = express.Router();
 
+//router for getting single book
+router.get("/:id", BookController.getSingleBook);
+
 //router for creating a book
 router.post(
   "/create-book",
