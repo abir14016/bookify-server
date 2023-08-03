@@ -15,6 +15,9 @@ router.patch(
   BookController.updateBook,
 );
 
+//router for deleting single book
+router.delete("/:id", BookController.deleteBook);
+
 //router for creating a book
 router.post(
   "/create-book",

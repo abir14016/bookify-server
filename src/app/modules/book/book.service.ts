@@ -123,9 +123,22 @@ const updateBook = async (id: string, payload: Partial<IBook>) => {
   return result;
 };
 
+//delete book function
+const deleteBook = async (id: string): Promise<IBook | null> => {
+  //checking wheater the book is exist or not
+  const isBookExist = await Book.findById(id);
+  if (!isBookExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Book not found !");
+  }
+
+  const result = Book.findByIdAndDelete(id);
+  return result;
+};
+
 export const BookService = {
   createBook,
   getAllBooks,
   getSingleBook,
   updateBook,
+  deleteBook,
 };
