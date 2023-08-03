@@ -90,8 +90,42 @@ const getSingleBook = async (id: string): Promise<IBook | null> => {
   return result;
 };
 
+//update single book function
+const updateBook = async (id: string, payload: Partial<IBook>) => {
+  //checking wheater the updated data is emty object or not
+  if (!Object.keys(payload).length) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "You did not enter anything to update !",
+    );
+  }
+  //checking wheater the book is exist or not
+  const isBookExist = await Book.findById(id);
+  if (!isBookExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Book not found !");
+  }
+
+  // Check if the owner ID exists in the User collection
+  const isOwnerExists = await User.findOne({ _id: payload.owner });
+  // Check if the payload has a seller field
+  if (payload.owner) {
+    if (!isOwnerExists) {
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        "The seller you want to update is not exist !",
+      );
+    }
+  }
+
+  const result = await Book.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  }).populate("owner");
+  return result;
+};
+
 export const BookService = {
   createBook,
   getAllBooks,
   getSingleBook,
+  updateBook,
 };

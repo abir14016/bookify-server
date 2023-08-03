@@ -8,6 +8,13 @@ const router = express.Router();
 //router for getting single book
 router.get("/:id", BookController.getSingleBook);
 
+//router for updating single book
+router.patch(
+  "/:id",
+  validateRequest(BookValidation.updateBookZodSchema),
+  BookController.updateBook,
+);
+
 //router for creating a book
 router.post(
   "/create-book",
