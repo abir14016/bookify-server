@@ -4,6 +4,12 @@ import app from "./app";
 import config from "./config/index";
 import { Server } from "http";
 
+//handling uncaught exception
+process.on("uncaughtException", error => {
+  console.log(error);
+  process.exit(1);
+});
+
 let server: Server;
 
 async function bootsrtap() {
@@ -33,3 +39,11 @@ async function bootsrtap() {
 }
 
 bootsrtap();
+
+//terminate the server with signal
+process.on("SIGTERM", () => {
+  console.log("SIGTERM is received. we are colsing our server");
+  if (server) {
+    server.close();
+  }
+});
