@@ -2,8 +2,9 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
-import httpStatus from "http-status";
+import routes from "./app/routes";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import httpStatus from "http-status";
 
 dotenv.config({ path: path.join(process.cwd(), ".env") });
 
@@ -14,6 +15,9 @@ app.use(cors());
 //parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//Application routes
+app.use("/api/v1/", routes);
 
 //global error handler
 app.use(globalErrorHandler);
