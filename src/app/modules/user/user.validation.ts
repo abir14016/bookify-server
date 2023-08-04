@@ -10,6 +10,9 @@ const createUserZodSchema = z.object({
     password: z.string({
       required_error: "password is required",
     }),
+    name: z.string({
+      required_error: "Name is required",
+    }),
   }),
 });
 

@@ -13,6 +13,10 @@ const UserSchema = new Schema<IUser>(
       required: true,
       select: false,
     },
+    name: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

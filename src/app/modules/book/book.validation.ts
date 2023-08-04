@@ -18,6 +18,7 @@ const createBookZodSchema = z.object({
     owner: z.string({
       required_error: "Owner is is required",
     }),
+    reviews: z.array(z.string()).optional(),
   }),
 });
 
@@ -50,6 +51,7 @@ const updateBookZodSchema = z.object({
         required_error: "Owner is is required",
       })
       .optional(),
+    reviews: z.array(z.string()).optional(),
   }),
 });
 

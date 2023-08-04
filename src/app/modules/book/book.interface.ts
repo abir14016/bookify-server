@@ -8,6 +8,7 @@ export type IBook = {
   imageURL?: string;
   publicationYear: number;
   owner: Types.ObjectId | IUser;
+  reviews?: [];
 };
 
 export type BookModel = Model<IBook, Record<string, unknown>>;
