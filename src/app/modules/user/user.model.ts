@@ -28,6 +28,26 @@ const UserSchema = new Schema<IUser>(
   },
 );
 
+// isUserExist statics
+UserSchema.statics.isUserExist = async function (
+  email: string,
+): Promise<
+  (Pick<IUser, "email" | "name" | "password"> & { _id: string }) | null
+> {
+  return await User.findOne(
+    { email },
+    { email: 1, name: 1, password: 1, _id: 1 },
+  );
+};
+
+// isPasswordMatched statics
+UserSchema.statics.isPasswordMatched = async function (
+  givenPassword: string,
+  savedPassword: string,
+): Promise<boolean> {
+  return await bcrypt.compare(givenPassword, savedPassword);
+};
+
 //save hash password exactly before saving the document[user] into database
 UserSchema.pre("save", async function (next) {
   //hashing password
