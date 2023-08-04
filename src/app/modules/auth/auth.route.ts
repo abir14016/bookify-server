@@ -12,4 +12,7 @@ router.post(
   AuthController.loginUser,
 );
 
+//router for creating access token using refresh token for user
+router.post("/refresh-token", AuthController.refreshToken);
+
 export const AuthRoutes = router;
