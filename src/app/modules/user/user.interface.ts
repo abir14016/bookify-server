@@ -6,4 +6,6 @@ export type IUser = {
   name: string;
 };
 
+export type ICreateUserResponse = Omit<IUser, "password">;
+
 export type UserModel = Model<IUser, Record<string, unknown>>;

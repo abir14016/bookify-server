@@ -10,7 +10,7 @@ const createUser = async (payload: IUser): Promise<IUser> => {
     throw new ApiError(httpStatus.BAD_REQUEST, "You did not enter anything !");
   }
   const result = await User.create(payload);
-  return result;
+  return result.toObject();
 };
 
 export const UserService = {
