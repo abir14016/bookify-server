@@ -8,6 +8,9 @@ import { IGenericResponse } from "../../../interfaces/common";
 import { PaginationHelpers } from "../../../helpers/paginationHelpers";
 import { bookSearchableFields } from "./book.constant";
 import { SortOrder } from "mongoose";
+import { JwtHelpers } from "../../../helpers/jwtHelpers";
+import config from "../../../config";
+import { Secret } from "jsonwebtoken";
 
 //create book function
 const createBook = async (payload: IBook): Promise<IBook> => {
@@ -91,7 +94,11 @@ const getSingleBook = async (id: string): Promise<IBook | null> => {
 };
 
 //update single book function
-const updateBook = async (id: string, payload: Partial<IBook>) => {
+const updateBook = async (
+  id: string,
+  payload: Partial<IBook>,
+  token: string,
+) => {
   //checking wheater the updated data is emty object or not
   if (!Object.keys(payload).length) {
     throw new ApiError(
@@ -105,16 +112,35 @@ const updateBook = async (id: string, payload: Partial<IBook>) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Book not found !");
   }
 
-  // Check if the owner ID exists in the User collection
-  const isOwnerExists = await User.findOne({ _id: payload.owner });
+  // Check if the owner ID exists in the User collection if updating owner field
+  const isOwnerExist = await User.findOne({ _id: payload.owner });
   // Check if the payload has a seller field
   if (payload.owner) {
-    if (!isOwnerExists) {
+    if (!isOwnerExist) {
       throw new ApiError(
         httpStatus.NOT_FOUND,
         "The seller you want to update is not exist !",
       );
     }
+  }
+
+  //checking whwther the current user is owner of this book or not
+  const verifiedUser = JwtHelpers.verifyToken(
+    token,
+    config.jwt.secret as Secret,
+  );
+  if (!verifiedUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+
+  const owner = await User.findById(isBookExist.owner);
+
+  if (!owner) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (owner?.email !== verifiedUser?.userEmail) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden !");
   }
 
   const result = await Book.findOneAndUpdate({ _id: id }, payload, {
