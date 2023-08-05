@@ -150,11 +150,30 @@ const updateBook = async (
 };
 
 //delete book function
-const deleteBook = async (id: string): Promise<IBook | null> => {
+const deleteBook = async (id: string, token: string): Promise<IBook | null> => {
   //checking wheater the book is exist or not
   const isBookExist = await Book.findById(id);
   if (!isBookExist) {
     throw new ApiError(httpStatus.NOT_FOUND, "Book not found !");
+  }
+
+  //checking whwther the current user is owner of this book or not
+  const verifiedUser = JwtHelpers.verifyToken(
+    token,
+    config.jwt.secret as Secret,
+  );
+  if (!verifiedUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+
+  const owner = await User.findById(isBookExist.owner);
+
+  if (!owner) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (owner?.email !== verifiedUser?.userEmail) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden !");
   }
 
   const result = Book.findByIdAndDelete(id);
