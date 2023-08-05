@@ -15,6 +15,13 @@ router.patch(
   BookController.updateBook,
 );
 
+//review
+router.patch(
+  "/review/:id",
+  validateRequest(BookValidation.reviewZodSchema),
+  BookController.review,
+);
+
 //router for deleting single book
 router.delete("/:id", BookController.deleteBook);
 

@@ -1,6 +1,28 @@
 import { Schema, model } from "mongoose";
-import { BookModel, IBook } from "./book.interface";
+import { BookModel, IBook, IReviewResponse } from "./book.interface";
 
+//review schema
+const ReviewResponseSchema = new Schema<IReviewResponse>(
+  {
+    reviewerName: {
+      type: String,
+      required: true,
+    },
+    reviewerEmail: {
+      type: String,
+      required: true,
+    },
+    review: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    _id: false, // Exclude _id from the subdocument
+  },
+);
+
+// main schema[book]
 const BookSchema = new Schema<IBook>(
   {
     title: {
@@ -28,7 +50,7 @@ const BookSchema = new Schema<IBook>(
       required: true,
     },
     reviews: {
-      type: [String],
+      type: [ReviewResponseSchema],
     },
   },
   {

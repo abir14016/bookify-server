@@ -1,6 +1,16 @@
 import { Model, Types } from "mongoose";
 import { IUser } from "../user/user.interface";
 
+export type IReview = {
+  review: string;
+};
+
+export type IReviewResponse = {
+  reviewerName: string;
+  reviewerEmail: string;
+  review: string;
+} & Document;
+
 export type IBook = {
   title: string;
   author: string;
@@ -8,7 +18,7 @@ export type IBook = {
   imageURL?: string;
   publicationYear: number;
   owner: Types.ObjectId | IUser;
-  reviews?: [];
+  reviews?: [IReviewResponse];
 };
 
 export type BookModel = Model<IBook, Record<string, unknown>>;

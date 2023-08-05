@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
 import { User } from "../user/user.model";
-import { IBook, IBookFilters } from "./book.interface";
+import { IBook, IBookFilters, IReview } from "./book.interface";
 import { Book } from "./book.model";
 import { IPaginationOptions } from "../../../interfaces/paginationOptions";
 import { IGenericResponse } from "../../../interfaces/common";
@@ -180,10 +180,47 @@ const deleteBook = async (id: string, token: string): Promise<IBook | null> => {
   return result;
 };
 
+//review
+const review = async (
+  id: string,
+  payload: IReview,
+  token: string,
+): Promise<IBook | null> => {
+  //checking wheater the book is exist or not
+  const isBookExist = await Book.findById(id);
+  if (!isBookExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Book not found !");
+  }
+
+  const verifiedUser = JwtHelpers.verifyToken(
+    token,
+    config.jwt.secret as Secret,
+  );
+  if (!verifiedUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+
+  const reviewer = await User.findOne({ email: verifiedUser.userEmail });
+
+  const review = {
+    reviewerName: reviewer?.name,
+    reviewerEmail: reviewer?.email,
+    review: payload?.review,
+  };
+
+  const result = await Book.findOneAndUpdate(
+    { _id: id },
+    { $push: { reviews: review } },
+    { new: true },
+  ).populate("owner");
+  return result;
+};
+
 export const BookService = {
   createBook,
   getAllBooks,
   getSingleBook,
   updateBook,
   deleteBook,
+  review,
 };

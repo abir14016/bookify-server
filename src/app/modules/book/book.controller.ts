@@ -87,10 +87,30 @@ const deleteBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+//controller for review
+const review = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+  const result = await BookService.review(id, updatedData, token);
+
+  sendResponse<IBook>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: `Review added successfully`,
+    data: result,
+  });
+});
+
 export const BookController = {
   createBook,
   getAllBooks,
   getSingleBook,
   updateBook,
   deleteBook,
+  review,
 };
