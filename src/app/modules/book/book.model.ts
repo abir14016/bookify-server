@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { BookModel, IBook, IReviewResponse } from "./book.interface";
+import { genres } from "./book.constant";
 
 //review schema
 const ReviewResponseSchema = new Schema<IReviewResponse>(
@@ -28,6 +29,7 @@ const BookSchema = new Schema<IBook>(
     title: {
       type: String,
       required: true,
+      unique: true,
     },
     author: {
       type: String,
@@ -36,6 +38,7 @@ const BookSchema = new Schema<IBook>(
     genre: {
       type: String,
       required: true,
+      enum: genres,
     },
     imageURL: {
       type: String,

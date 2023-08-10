@@ -5,6 +5,14 @@ export type IReview = {
   review: string;
 };
 
+export type IGenre =
+  | "Self-Help"
+  | "Detective"
+  | "Programming"
+  | "Thriller"
+  | "Science Fiction"
+  | "Novel";
+
 export type IReviewResponse = {
   reviewerName: string;
   reviewerEmail: string;
