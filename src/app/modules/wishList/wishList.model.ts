@@ -19,7 +19,7 @@ const WishListSchema = new Schema<IWishList>(
       type: String,
       required: true,
       enum: tags,
-      default: "will read in future",
+      // default: "will read in future",
     },
   },
   {

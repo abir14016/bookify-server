@@ -16,6 +16,13 @@ const addToWishList = async (payload: IWishList): Promise<IWishList> => {
   return result;
 };
 
+const getAllWishListBooks = async (): Promise<IWishList[]> => {
+  const result = await WishList.find().populate("user").populate("book");
+
+  return result;
+};
+
 export const WishListService = {
   addToWishList,
+  getAllWishListBooks,
 };

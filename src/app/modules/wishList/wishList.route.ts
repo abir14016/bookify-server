@@ -5,11 +5,13 @@ import { WishListValidation } from "./wishList.validation";
 
 const router = express.Router();
 
-//router for creating a book
+//router for add to wish list
 router.post(
   "/add",
   validateRequest(WishListValidation.addToWistListZodSchema),
   WishListController.addToWishList,
 );
+
+router.get("/", WishListController.getWishListBooks);
 
 export const WishListRoutes = router;

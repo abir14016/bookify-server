@@ -18,6 +18,18 @@ const addToWishList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getWishListBooks = catchAsync(async (req: Request, res: Response) => {
+  const result = await WishListService.getAllWishListBooks();
+
+  sendResponse<IWishList[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Books retrieved successfully",
+    data: result,
+  });
+});
+
 export const WishListController = {
   addToWishList,
+  getWishListBooks,
 };
