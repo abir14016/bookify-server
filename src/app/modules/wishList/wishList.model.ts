@@ -27,6 +27,7 @@ const WishListSchema = new Schema<IWishList>(
     toJSON: {
       virtuals: true,
     },
+    collection: "wishList",
   },
 );
 
