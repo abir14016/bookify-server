@@ -42,6 +42,7 @@ const BookSchema = new Schema<IBook>(
     },
     imageURL: {
       type: String,
+      unique: true,
     },
     publicationYear: {
       type: Number,

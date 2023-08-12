@@ -69,7 +69,7 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-//controller for deleting single cow
+//controller for deleting single book
 const deleteBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const token = req.headers.authorization;
@@ -96,6 +96,7 @@ const review = catchAsync(async (req: Request, res: Response) => {
   if (!token) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
   }
+
   const result = await BookService.review(id, updatedData, token);
 
   sendResponse<IBook>(res, {
