@@ -5,7 +5,7 @@ import httpStatus from "http-status";
 import { IWishList } from "./wishList.interface";
 import { WishListService } from "./wishList.service";
 
-//controller for creating a book
+//controller for add to wishlist
 const addToWishList = catchAsync(async (req: Request, res: Response) => {
   const { ...wishListData } = req.body;
   const result = await WishListService.addToWishList(wishListData);
