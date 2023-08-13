@@ -4,6 +4,7 @@ import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { IWishList } from "./wishList.interface";
 import { WishListService } from "./wishList.service";
+import ApiError from "../../../errors/ApiError";
 
 //controller for add to wishlist
 const addToWishList = catchAsync(async (req: Request, res: Response) => {
@@ -18,7 +19,7 @@ const addToWishList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getWishListBooks = catchAsync(async (req: Request, res: Response) => {
+const getAllWishListBooks = catchAsync(async (req: Request, res: Response) => {
   const result = await WishListService.getAllWishListBooks();
 
   sendResponse<IWishList[]>(res, {
@@ -29,7 +30,23 @@ const getWishListBooks = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyWishListBooks = catchAsync(async (req: Request, res: Response) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+  const result = await WishListService.getMyWishListBooks(token);
+
+  sendResponse<IWishList[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "My books retrieved successfully",
+    data: result,
+  });
+});
+
 export const WishListController = {
   addToWishList,
-  getWishListBooks,
+  getAllWishListBooks,
+  getMyWishListBooks,
 };
