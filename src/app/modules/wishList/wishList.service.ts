@@ -13,6 +13,16 @@ const addToWishList = async (payload: IWishList): Promise<IWishList> => {
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
+
+  const existingWishList = await WishList.findOne({
+    user: payload.user,
+    book: payload.book,
+  });
+
+  if (existingWishList) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "You already added this book");
+  }
+
   const result = await (
     await (await WishList.create(payload)).populate("user")
   ).populate({ path: "book", populate: { path: "owner" } });
