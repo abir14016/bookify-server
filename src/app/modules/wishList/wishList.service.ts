@@ -85,6 +85,38 @@ const getMyWishListBooks = async (token: string): Promise<IWishList[]> => {
   return result;
 };
 
+//mark as read reading list function
+const markAsRead = async (
+  token: string,
+  payload: IWishList,
+): Promise<IWishList | null> => {
+  const verifiedUser = JwtHelpers.verifyToken(
+    token,
+    config.jwt.secret as Secret,
+  );
+  if (!verifiedUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+
+  const query = {
+    _id: payload?._id,
+    user: verifiedUser.userId,
+    tag: "currently reading",
+  };
+
+  const update = {
+    $set: {
+      tag: "completed",
+    },
+  };
+
+  const result = await ReadingList.findOneAndUpdate(query, update).populate({
+    path: "book",
+    populate: { path: "owner" },
+  });
+
+  return result;
+};
 //get specific[by user] reading list function
 const getMyReadingListBooks = async (token: string): Promise<IWishList[]> => {
   const verifiedUser = JwtHelpers.verifyToken(
@@ -97,7 +129,29 @@ const getMyReadingListBooks = async (token: string): Promise<IWishList[]> => {
 
   const result = await ReadingList.find({
     user: verifiedUser.userId,
-    tag: "currently reading",
+  })
+    .populate("user")
+    .populate({
+      path: "book",
+      populate: { path: "owner" },
+    });
+
+  return result;
+};
+
+//get specific[by user] completed list function
+const getMyCompletedListBooks = async (token: string): Promise<IWishList[]> => {
+  const verifiedUser = JwtHelpers.verifyToken(
+    token,
+    config.jwt.secret as Secret,
+  );
+  if (!verifiedUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+
+  const result = await ReadingList.find({
+    user: verifiedUser.userId,
+    tag: "completed",
   }).populate({
     path: "book",
     populate: { path: "owner" },
@@ -112,4 +166,6 @@ export const WishListService = {
   getMyWishListBooks,
   addToReadingList,
   getMyReadingListBooks,
+  markAsRead,
+  getMyCompletedListBooks,
 };

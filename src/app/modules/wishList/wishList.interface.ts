@@ -5,6 +5,7 @@ import { IBook } from "../book/book.interface";
 export type ITag = "will read in future" | "currently reading" | "completed";
 
 export type IWishList = {
+  _id: string;
   user: Types.ObjectId | IUser;
   book: Types.ObjectId | IBook;
   tag: ITag;

@@ -78,10 +78,47 @@ const getMyReadingListBooks = catchAsync(
   },
 );
 
+//controller for getting specific[by user] completed list books
+const getMyCompletedListBooks = catchAsync(
+  async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    if (!token) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+    }
+    const result = await WishListService.getMyCompletedListBooks(token);
+
+    sendResponse<IWishList[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "My completed list books retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+//controller for mark as read
+const markAsRead = catchAsync(async (req: Request, res: Response) => {
+  const { ...wishListData } = req.body;
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+  const result = await WishListService.markAsRead(token, wishListData);
+
+  sendResponse<IWishList>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "mark as completed",
+    data: result,
+  });
+});
+
 export const WishListController = {
   addToWishList,
   getAllWishListBooks,
   getMyWishListBooks,
   addToReadingList,
   getMyReadingListBooks,
+  markAsRead,
+  getMyCompletedListBooks,
 };
