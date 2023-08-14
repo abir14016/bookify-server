@@ -19,6 +19,19 @@ const addToWishList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+//controller for add to reading list
+const addToReadingList = catchAsync(async (req: Request, res: Response) => {
+  const { ...wishListData } = req.body;
+  const result = await WishListService.addToReadingList(wishListData);
+
+  sendResponse<IWishList>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: `Successfully added to readingList`,
+    data: result,
+  });
+});
+
 const getAllWishListBooks = catchAsync(async (req: Request, res: Response) => {
   const result = await WishListService.getAllWishListBooks();
 
@@ -30,6 +43,22 @@ const getAllWishListBooks = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyReadingListBooks = catchAsync(
+  async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    if (!token) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+    }
+    const result = await WishListService.getMyReadingListBooks(token);
+
+    sendResponse<IWishList[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "My books retrieved successfully",
+      data: result,
+    });
+  },
+);
 const getMyWishListBooks = catchAsync(async (req: Request, res: Response) => {
   const token = req.headers.authorization;
   if (!token) {
@@ -49,4 +78,6 @@ export const WishListController = {
   addToWishList,
   getAllWishListBooks,
   getMyWishListBooks,
+  addToReadingList,
+  getMyReadingListBooks,
 };
