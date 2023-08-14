@@ -32,6 +32,7 @@ const addToReadingList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+//controller for getting all wishlist books[unused]
 const getAllWishListBooks = catchAsync(async (req: Request, res: Response) => {
   const result = await WishListService.getAllWishListBooks();
 
@@ -43,6 +44,23 @@ const getAllWishListBooks = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+//controller for getting specific[by user] wishlist books
+const getMyWishListBooks = catchAsync(async (req: Request, res: Response) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+  const result = await WishListService.getMyWishListBooks(token);
+
+  sendResponse<IWishList[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "My wishlist books retrieved successfully",
+    data: result,
+  });
+});
+
+//controller for getting specific[by user] reading list books
 const getMyReadingListBooks = catchAsync(
   async (req: Request, res: Response) => {
     const token = req.headers.authorization;
@@ -54,25 +72,11 @@ const getMyReadingListBooks = catchAsync(
     sendResponse<IWishList[]>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "My books retrieved successfully",
+      message: "My reading list books retrieved successfully",
       data: result,
     });
   },
 );
-const getMyWishListBooks = catchAsync(async (req: Request, res: Response) => {
-  const token = req.headers.authorization;
-  if (!token) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
-  }
-  const result = await WishListService.getMyWishListBooks(token);
-
-  sendResponse<IWishList[]>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "My books retrieved successfully",
-    data: result,
-  });
-});
 
 export const WishListController = {
   addToWishList,

@@ -15,7 +15,7 @@ router.post(
   WishListController.addToWishList,
 );
 
-router.patch("/add-to-reading-list", WishListController.addToReadingList);
+router.post("/add-to-reading-list", WishListController.addToReadingList);
 
 router.get("/", WishListController.getAllWishListBooks);
 
