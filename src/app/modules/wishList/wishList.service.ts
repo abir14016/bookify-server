@@ -56,10 +56,12 @@ const addToReadingList = async (payload: IWishList): Promise<IWishList> => {
 
 //get all wishlist function [unused]
 const getAllWishListBooks = async (): Promise<IWishList[]> => {
-  const result = await WishList.find().populate({
-    path: "book",
-    populate: { path: "owner" },
-  });
+  const result = await WishList.find()
+    .populate("user")
+    .populate({
+      path: "book",
+      populate: { path: "owner" },
+    });
 
   return result;
 };
@@ -77,10 +79,12 @@ const getMyWishListBooks = async (token: string): Promise<IWishList[]> => {
   const result = await WishList.find({
     user: verifiedUser.userId,
     tag: "will read in future",
-  }).populate({
-    path: "book",
-    populate: { path: "owner" },
-  });
+  })
+    .populate("user")
+    .populate({
+      path: "book",
+      populate: { path: "owner" },
+    });
 
   return result;
 };
@@ -110,13 +114,16 @@ const markAsRead = async (
     },
   };
 
-  const result = await ReadingList.findOneAndUpdate(query, update).populate({
-    path: "book",
-    populate: { path: "owner" },
-  });
+  const result = await ReadingList.findOneAndUpdate(query, update)
+    .populate("user")
+    .populate({
+      path: "book",
+      populate: { path: "owner" },
+    });
 
   return result;
 };
+
 //get specific[by user] reading list function
 const getMyReadingListBooks = async (token: string): Promise<IWishList[]> => {
   const verifiedUser = JwtHelpers.verifyToken(
@@ -152,10 +159,39 @@ const getMyCompletedListBooks = async (token: string): Promise<IWishList[]> => {
   const result = await ReadingList.find({
     user: verifiedUser.userId,
     tag: "completed",
-  }).populate({
-    path: "book",
-    populate: { path: "owner" },
-  });
+  })
+    .populate("user")
+    .populate({
+      path: "book",
+      populate: { path: "owner" },
+    });
+
+  return result;
+};
+
+//remove from wishlist function
+const removeFromWishList = async (
+  token: string,
+  payload: IWishList,
+): Promise<IWishList | null> => {
+  const verifiedUser = JwtHelpers.verifyToken(
+    token,
+    config.jwt.secret as Secret,
+  );
+  if (!verifiedUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+
+  const result = await WishList.findOneAndDelete({
+    _id: payload._id,
+    user: verifiedUser.userId,
+    tag: "will read in future",
+  })
+    .populate("user")
+    .populate({
+      path: "book",
+      populate: { path: "owner" },
+    });
 
   return result;
 };
@@ -168,4 +204,5 @@ export const WishListService = {
   getMyReadingListBooks,
   markAsRead,
   getMyCompletedListBooks,
+  removeFromWishList,
 };

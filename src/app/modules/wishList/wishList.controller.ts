@@ -113,6 +113,23 @@ const markAsRead = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+//controller for removing book from wishlist
+const removeFromWishList = catchAsync(async (req: Request, res: Response) => {
+  const { ...wishListData } = req.body;
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized !");
+  }
+  const result = await WishListService.removeFromWishList(token, wishListData);
+
+  sendResponse<IWishList>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "removed from wishlist",
+    data: result,
+  });
+});
+
 export const WishListController = {
   addToWishList,
   getAllWishListBooks,
@@ -121,4 +138,5 @@ export const WishListController = {
   getMyReadingListBooks,
   markAsRead,
   getMyCompletedListBooks,
+  removeFromWishList,
 };

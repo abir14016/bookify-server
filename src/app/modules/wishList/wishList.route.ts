@@ -17,6 +17,7 @@ router.get("/my-wishlist", WishListController.getMyWishListBooks);
 router.get("/my-reading-list", WishListController.getMyReadingListBooks);
 router.get("/my-completed-list", WishListController.getMyCompletedListBooks);
 router.patch("/my-reading-list/mark-as-read", WishListController.markAsRead);
+router.delete("/remove-from-wishlist", WishListController.removeFromWishList);
 
 router.get("/", WishListController.getAllWishListBooks);
 
