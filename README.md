@@ -1,4 +1,4 @@
-# Book Catelog Backend Assignment
+# Book Catelog Project
 
 # API Documentation
 
@@ -8,7 +8,7 @@
 
 ## Live Website Link [frontend]
 
-[https://booki-fy.netlify.app//](https://booki-fy.netlify.app/)
+[https://booki-fy.netlify.app/](https://booki-fy.netlify.app/)
 
 ## Application Routes
 
