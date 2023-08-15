@@ -2,15 +2,52 @@ import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
 import { IUser } from "./user.interface";
 import { User } from "./user.model";
+import { JwtHelpers } from "../../../helpers/jwtHelpers";
+import { Secret } from "jsonwebtoken";
+import config from "../../../config";
 
+export type ICreateUserResponse = {
+  accessToken: string;
+  refreshToken: string;
+  result: IUser;
+};
 //create user function
-const createUser = async (payload: IUser): Promise<IUser> => {
+const createUser = async (payload: IUser): Promise<ICreateUserResponse> => {
+  const { email } = payload;
   //checking wheater the updated data is emty object or not
   if (!Object.keys(payload).length) {
     throw new ApiError(httpStatus.BAD_REQUEST, "You did not enter anything !");
   }
+
   const result = await User.create(payload);
-  return result.toObject();
+
+  //check whetehr the user exist or not
+  const isUserExist = await User.isUserExist(email);
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not exist !");
+  }
+
+  const { email: userEmail, name: userName } = payload;
+  const { _id: userId } = isUserExist;
+  //create access token
+  const accessToken = JwtHelpers.createToken(
+    { userEmail, userName, userId },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string,
+  );
+
+  //create refresh token
+  const refreshToken = JwtHelpers.createToken(
+    { userEmail },
+    config.jwt.refresh_secret as Secret,
+    config.jwt.refresh_expires_in as string,
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+    result,
+  };
 };
 
 export const UserService = {

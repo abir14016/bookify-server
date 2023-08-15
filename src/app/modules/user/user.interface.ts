@@ -7,7 +7,7 @@ export type IUser = {
   name: string;
 };
 
-export type ICreateUserResponse = Omit<IUser, "password">;
+// export type ICreateUserResponse = Omit<IUser, "password">;
 
 //type for statics
 export type UserModel = {
