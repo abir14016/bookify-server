@@ -119,7 +119,7 @@ const updateBook = async (
     if (!isOwnerExist) {
       throw new ApiError(
         httpStatus.NOT_FOUND,
-        "The seller you want to update is not exist !",
+        "The user you want to update is not exist !",
       );
     }
   }
